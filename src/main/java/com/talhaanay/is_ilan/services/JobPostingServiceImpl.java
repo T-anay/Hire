@@ -19,6 +19,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.talhaanay.is_ilan.dto.JobPostingDto;
 import com.talhaanay.is_ilan.mapper.JobPostingMapper;
+import com.talhaanay.is_ilan.enums.Role;
+import com.talhaanay.is_ilan.enums.JobStatus;
 
 import java.util.List;
 
@@ -43,7 +45,7 @@ public class JobPostingServiceImpl implements JobPostingService {
         User employer = userRepository.findByEmail(authenticatedUserEmail)
                 .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
 
-        if (!"IS_VEREN".equalsIgnoreCase(employer.getRole())) {
+        if (employer.getRole() != Role.IS_VEREN) {
             throw new AccessDeniedException("Sadece İş Verenler yeni ilan oluşturabilir.");
         }
 
@@ -53,7 +55,7 @@ public class JobPostingServiceImpl implements JobPostingService {
         newJobPosting.setLocation(createDto.getLocation());
         newJobPosting.setLastDateToApply(createDto.getLastDateToApply());
         newJobPosting.setJobType(createDto.getJobType());
-        newJobPosting.setStatus("ACIK");
+        newJobPosting.setStatus(JobStatus.ACIK);
         newJobPosting.setEmployer(employer);
         JobPosting savedJobPosting = jobPostingRepository.save(newJobPosting);
         return jobPostingMapper.jobPostingToJobPostingDto(savedJobPosting);
@@ -62,7 +64,7 @@ public class JobPostingServiceImpl implements JobPostingService {
     @Override
     @Transactional(readOnly = true)
     public Page<JobPostingDto> getAllOpenJobPostings(Pageable pageable) {
-        Page<JobPosting> openPostingsPage = jobPostingRepository.findAllByStatus("ACIK", pageable);
+        Page<JobPosting> openPostingsPage = jobPostingRepository.findAllByStatus(JobStatus.ACIK, pageable);
         return openPostingsPage.map(jobPostingMapper::jobPostingToJobPostingDto);
     }
 

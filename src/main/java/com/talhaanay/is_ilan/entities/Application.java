@@ -3,6 +3,7 @@ package com.talhaanay.is_ilan.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
+import com.talhaanay.is_ilan.enums.ApplicationStatus;
 
 import java.time.LocalDateTime;
 
@@ -25,7 +26,8 @@ public class Application {
     private User candidate;
 
     @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ApplicationStatus status;
 
     @Column(columnDefinition = "TEXT")
     private String coverLetter;
@@ -37,7 +39,7 @@ public class Application {
     protected void onCreate() {
         this.applicationDate = LocalDateTime.now();
         if (this.status == null) {
-            this.status = "DEGERLENDIRILIYOR";
+            this.status = ApplicationStatus.DEGERLENDIRILIYOR;
         }
     }
 }

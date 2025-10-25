@@ -14,6 +14,7 @@ import com.talhaanay.is_ilan.exception.BadRequestException;
 import com.talhaanay.is_ilan.exception.AuthenticationException;
 import com.talhaanay.is_ilan.dto.RegisterIsArayanDto;
 import com.talhaanay.is_ilan.dto.RegisterIsVerenDto;
+import com.talhaanay.is_ilan.enums.Role;
 
 @RequiredArgsConstructor
 @Service
@@ -33,7 +34,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         User newUser = userMapper.registerIsArayanDtoToUser(registerDto);
-        newUser.setRole("IS_ARAYAN");
+        newUser.setRole(Role.IS_ARAYAN);
         newUser.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         userRepository.save(newUser);
         return "İş Arayan başarıyla kaydedildi.";
@@ -47,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         User newUser = userMapper.registerIsVerenDtoToUser(registerDto);
-        newUser.setRole("IS_VEREN");
+        newUser.setRole(Role.IS_VEREN);
         newUser.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         userRepository.save(newUser);
         return "İş Veren başarıyla kaydedildi.";

@@ -3,6 +3,7 @@ package com.talhaanay.is_ilan.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
+import com.talhaanay.is_ilan.enums.Role;
 
 import java.time.LocalDate;
 
@@ -21,8 +22,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String role;
+    private Role role;
 
     private String firstName;
 

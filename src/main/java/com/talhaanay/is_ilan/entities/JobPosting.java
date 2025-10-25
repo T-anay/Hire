@@ -3,6 +3,7 @@ package com.talhaanay.is_ilan.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
+import com.talhaanay.is_ilan.enums.JobStatus;
 
 import java.time.LocalDateTime;
 
@@ -27,8 +28,9 @@ public class JobPosting {
 
     private String jobType;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
+    private JobStatus status;
 
     private LocalDateTime lastDateToApply;
 

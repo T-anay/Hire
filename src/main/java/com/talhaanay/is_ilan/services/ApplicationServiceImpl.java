@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.talhaanay.is_ilan.enums.Role;
+import com.talhaanay.is_ilan.enums.JobStatus;
 
 import java.util.List;
 
@@ -38,15 +40,15 @@ public class ApplicationServiceImpl implements ApplicationService {
         User candidate = userRepository.findByEmail(authenticatedUserEmail)
                 .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
 
-        if (!"IS_ARAYAN".equalsIgnoreCase(candidate.getRole())) {
+        if (candidate.getRole() != Role.IS_ARAYAN) {
             throw new AccessDeniedException("Sadece İş Arayanlar başvuru yapabilir.");
         }
 
         JobPosting jobPosting = jobPostingRepository.findById(jobId)
                 .orElseThrow(() -> new ResourceNotFoundException("İlan bulunamadı: " + jobId));
 
-        if (!"ACIK".equalsIgnoreCase(jobPosting.getStatus())) {
-            throw new BadRequestException("Bu ilana Başvuru Yapamazsınız, ilan aktif değil. Mevcut Durum: \" + jobPosting.getStatus());");
+        if (jobPosting.getStatus() != JobStatus.ACIK) {
+            throw new BadRequestException("Bu ilana Başvuru Yapamazsınız, ilan aktif değil. Mevcut Durum: " + jobPosting.getStatus());
         }
 
         Application newApplication = new Application();
@@ -64,13 +66,13 @@ public class ApplicationServiceImpl implements ApplicationService {
     public List<ApplicationResponseDto> getApplicationsForJob(Long jobId) {
 
         String authenticatedUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User employer = userRepository.findByEmail(authenticatedUserEmail)
+        User loggedInUser = userRepository.findByEmail(authenticatedUserEmail)
                 .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
 
         JobPosting jobPosting = jobPostingRepository.findById(jobId)
                 .orElseThrow(() -> new ResourceNotFoundException("İlan bulunamadı. ID: " + jobId));
 
-        if (!jobPosting.getEmployer().getId().equals(employer.getId())) {
+        if (!jobPosting.getEmployer().getId().equals(loggedInUser.getId())) {
             throw new AccessDeniedException("Bu ilana ait başvuruları görme yetkiniz yok.");
         }
 
@@ -89,7 +91,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         User candidate = userRepository.findByEmail(authenticatedUserEmail)
                 .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
 
-        if (!"IS_ARAYAN".equalsIgnoreCase(candidate.getRole())) {
+        if (candidate.getRole() != Role.IS_ARAYAN) {
             throw new AccessDeniedException("Sadece İş Arayanlar başvurularını görebilir.");
         }
 
