@@ -2,7 +2,8 @@ package com.talhaanay.is_ilan.mapper;
 
 import com.talhaanay.is_ilan.dto.RegisterIsArayanDto;
 import com.talhaanay.is_ilan.dto.RegisterIsVerenDto;
-import com.talhaanay.is_ilan.entities.User;
+import com.talhaanay.is_ilan.entities.Employer;
+import com.talhaanay.is_ilan.entities.JobSeeker;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -15,20 +16,13 @@ public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "password", ignore = true)
-    @Mapping(target = "companyName", ignore = true)
-    @Mapping(target = "companyLocation", ignore = true)
-    @Mapping(target = "aboutCompany", ignore = true)
-    @Mapping(target = "industry", ignore = true)
-    User registerIsArayanDtoToUser(RegisterIsArayanDto dto);
+    @Mapping(target = "email", source = "email")
+    JobSeeker registerIsArayanDtoToJobSeeker(RegisterIsArayanDto dto);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "password", ignore = true)
-    @Mapping(target = "firstName", ignore = true)
-    @Mapping(target = "lastName", ignore = true)
-    @Mapping(target = "phoneNumber", ignore = true)
-    @Mapping(target = "location", ignore = true)
-    @Mapping(target = "birthDate", ignore = true)
-    User registerIsVerenDtoToUser(RegisterIsVerenDto dto);
+    @Mapping(target = "email", source = "email")
+    Employer registerIsVerenDtoToEmployer(RegisterIsVerenDto dto);
 
 }

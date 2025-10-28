@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2-create-job-seeker-profiles" author="talhaanay">
+        <createTable tableName="job_seeker_profiles">
+            <column name="user_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="pk_job_seeker_profiles"
+                             foreignKeyName="fk_jobseeker_user" references="users(id)"
+                             nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)"/>
+            <column name="last_name" type="VARCHAR(255)"/>
+            <column name="phone_number" type="VARCHAR(255)"/>
+            <column name="location" type="VARCHAR(255)"/>
+            <column name="birth_date" type="date"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2-create-employer-profiles" author="talhaanay">
+        <createTable tableName="employer_profiles">
+            <column name="user_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="pk_employer_profiles"
+                             foreignKeyName="fk_employer_user" references="users(id)"
+                             nullable="false"/>
+            </column>
+            <column name="company_name" type="VARCHAR(255)"/>
+            <column name="company_location" type="VARCHAR(255)"/>
+            <column name="about_company" type="TEXT"/>
+            <column name="industry" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2-migrate-job-seekers" author="talhaanay">
+        <sql dbms="postgresql">
+            INSERT INTO job_seeker_profiles (user_id, first_name, last_name, phone_number, location, birth_date)
+            SELECT id, first_name, last_name, phone_number, location, birth_date
+            FROM users
+            WHERE role = 'IS_ARAYAN';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2-migrate-employers" author="talhaanay">
+        <sql dbms="postgresql">
+            INSERT INTO employer_profiles (user_id, company_name, company_location, about_company, industry)
+            SELECT id, company_name, company_location, about_company, industry
+            FROM users
+            WHERE role = 'IS_VEREN';
+        </sql>
+    </changeSet>
+
+    <changeSet id="2-drop-redundant-user-columns" author="talhaanay">
+        <dropColumn tableName="users" columnName="first_name"/>
+        <dropColumn tableName="users" columnName="last_name"/>
+        <dropColumn tableName="users" columnName="phone_number"/>
+        <dropColumn tableName="users" columnName="location"/>
+        <dropColumn tableName="users" columnName="birth_date"/>
+        <dropColumn tableName="users" columnName="company_name"/>
+        <dropColumn tableName="users" columnName="company_location"/>
+        <dropColumn tableName="users" columnName="about_company"/>
+        <dropColumn tableName="users" columnName="industry"/>
+    </changeSet>
+
+</databaseChangeLog>

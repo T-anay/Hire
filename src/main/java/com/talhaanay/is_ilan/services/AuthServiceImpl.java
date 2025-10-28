@@ -15,6 +15,8 @@ import com.talhaanay.is_ilan.exception.AuthenticationException;
 import com.talhaanay.is_ilan.dto.RegisterIsArayanDto;
 import com.talhaanay.is_ilan.dto.RegisterIsVerenDto;
 import com.talhaanay.is_ilan.enums.Role;
+import com.talhaanay.is_ilan.entities.JobSeeker;
+import com.talhaanay.is_ilan.entities.Employer;
 
 @RequiredArgsConstructor
 @Service
@@ -33,10 +35,10 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("Bu e-posta adresi zaten kullanılıyor.");
         }
 
-        User newUser = userMapper.registerIsArayanDtoToUser(registerDto);
-        newUser.setRole(Role.IS_ARAYAN);
-        newUser.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-        userRepository.save(newUser);
+        JobSeeker newJobSeeker = userMapper.registerIsArayanDtoToJobSeeker(registerDto);
+        newJobSeeker.setRole(Role.IS_ARAYAN);
+        newJobSeeker.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+        userRepository.save(newJobSeeker);
         return "İş Arayan başarıyla kaydedildi.";
     }
 
@@ -47,10 +49,10 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("Bu e-posta adresi zaten kullanılıyor.");
         }
 
-        User newUser = userMapper.registerIsVerenDtoToUser(registerDto);
-        newUser.setRole(Role.IS_VEREN);
-        newUser.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-        userRepository.save(newUser);
+        Employer newEmployer = userMapper.registerIsVerenDtoToEmployer(registerDto);
+        newEmployer.setRole(Role.IS_VEREN);
+        newEmployer.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+        userRepository.save(newEmployer);
         return "İş Veren başarıyla kaydedildi.";
     }
 

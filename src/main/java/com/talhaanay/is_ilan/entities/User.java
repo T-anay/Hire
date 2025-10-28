@@ -5,17 +5,17 @@ import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 import com.talhaanay.is_ilan.enums.Role;
 
-import java.time.LocalDate;
-
 @Data
 @Entity
 @Table(name = "users")
+@Inheritance(strategy = InheritanceType.JOINED)
 @DynamicUpdate
-public class User {
+public abstract class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(unique = true, nullable = false)
     private String email;
 
@@ -26,23 +26,6 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
-    private String firstName;
 
-    private String lastName;
-
-    private String phoneNumber;
-
-    private String location;
-
-    private LocalDate birthDate;
-
-    private String companyName;
-
-    @Column(columnDefinition = "TEXT")
-    private String aboutCompany;
-
-    private String companyLocation;
-
-    private String industry;
 
 }
